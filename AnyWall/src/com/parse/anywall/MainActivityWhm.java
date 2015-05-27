@@ -133,19 +133,8 @@ public class MainActivityWhm extends FragmentActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				// 2
-//			      Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
-//			      if (myLoc == null) {
-//			        Toast.makeText(MainActivity.this,
-//			            "Please try again after your location appears on the map.", Toast.LENGTH_LONG).show();
-//			        return;
-//			      }
-				
-				
-				// whm: test code
-			
-				  // 3
-				  LatLng myLoc = (mCurrentLocaiotn == null)? mLastLocation : mCurrentLocaiotn ;
+		
+				LatLng myLoc = (mCurrentLocaiotn == null)? mLastLocation : mCurrentLocaiotn ;
 				  if(myLoc == null){
 					  Toast.makeText(MainActivityWhm.this,
 					            "Please try again after your location appears on the map.", Toast.LENGTH_LONG).show();
