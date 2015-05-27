@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -42,9 +43,10 @@ public class MainActivityWhm extends FragmentActivity {
     private static final int SEARCH_RADIUS = 100;  // 100 KILOMETERS
 	  
 	  
+    // uis
 	private MapView mMapView;
 	private Button mBtnPost;
-	
+	private TextView mCurrentLocationName;
 	
 	//internal state
 	private LatLng  mCurrentLocaiotn;
@@ -70,15 +72,17 @@ public class MainActivityWhm extends FragmentActivity {
 					mCurrentLocationMarker = mMapView.addMarker(new MarkerOptions()
 					.icon(BitmapDescriptorFactory.fromResource(R.drawable.mark_location))
 					.position(mCurrentLocaiotn));
+					
+					// only for first location, animate to current locaiton
+					GeoPoint currentGeoPoint = new GeoPoint((int)(mCurrentLocaiotn.getLatitude()*1E6),(int)(mCurrentLocaiotn.getLongitude()*1E6));
+					mMapView.getController().animateTo(currentGeoPoint);
 				}
 				else {
 					mCurrentLocationMarker.setPosition(mCurrentLocaiotn);
 				}
 				
-				GeoPoint currentGeoPoint = new GeoPoint((int)(mCurrentLocaiotn.getLatitude()*1E6),(int)(mCurrentLocaiotn.getLongitude()*1E6));
-//				mMapView.getController().animateTo(new GeoPoint((int)(mCurrentLocaiotn.getLatitude()*1E6),(int)(mCurrentLocaiotn.getLatitude()*1E6)));
-//			/	mMapView.getController().setCenter(currentGeoPoint);
-				mMapView.getController().animateTo(currentGeoPoint);
+				// display current location in ui
+				mCurrentLocationName.setText("µ±«∞Œª÷√ : "+location.getName());
 		
 			}
 			else {
@@ -104,9 +108,23 @@ public class MainActivityWhm extends FragmentActivity {
 		super.onCreate(arg0);
 		
 		setContentView(R.layout.activity_main_whm);
-		mMapView = (MapView)findViewById(R.id.mapview);
+		
+		mMapView = (MapView)findViewById(R.id.mapview); 
 		mMapView.onCreate(arg0);
 		initMapView(mMapView);
+		
+		mCurrentLocationName = (TextView)findViewById(R.id.current_location);
+		mCurrentLocationName.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if(mCurrentLocaiotn != null){
+					GeoPoint currentGeoPoint = new GeoPoint((int)(mCurrentLocaiotn.getLatitude()*1E6),(int)(mCurrentLocaiotn.getLongitude()*1E6));
+					mMapView.getController().animateTo(currentGeoPoint);
+				}
+			}
+		});
 		
 		
 		mBtnPost = (Button)findViewById(R.id.post_button);
@@ -281,6 +299,7 @@ public class MainActivityWhm extends FragmentActivity {
 		
 		//register location request
 		TencentLocationRequest request = TencentLocationRequest.create();
+		request.setInterval(0);
 		
 		if(TencentLocationManager.getInstance(this).requestLocationUpdates(request, mLocationListener) != 0){
 			Toast.makeText(this, "request location updates failed", Toast.LENGTH_LONG).show();
