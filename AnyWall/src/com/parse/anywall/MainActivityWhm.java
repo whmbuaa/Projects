@@ -24,18 +24,23 @@ import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
+import com.tencent.mapsdk.raster.model.BitmapDescriptor;
 import com.tencent.mapsdk.raster.model.BitmapDescriptorFactory;
+import com.tencent.mapsdk.raster.model.CameraPosition;
 import com.tencent.mapsdk.raster.model.GeoPoint;
 import com.tencent.mapsdk.raster.model.LatLng;
+import com.tencent.mapsdk.raster.model.LatLngBounds;
 import com.tencent.mapsdk.raster.model.Marker;
 import com.tencent.mapsdk.raster.model.MarkerOptions;
 import com.tencent.tencentmap.mapsdk.map.MapView;
+import com.tencent.tencentmap.mapsdk.map.OnLoadedListener;
+import com.tencent.tencentmap.mapsdk.map.OnMapCameraChangeListener;
 import com.tencent.tencentmap.mapsdk.map.OnMarkerPressListener;
 
 public class MainActivityWhm extends FragmentActivity {
 	
 	// Maximum results returned from a Parse query
-    private static final int MAX_POST_SEARCH_RESULTS = 20;
+    private static final int MAX_POST_SEARCH_RESULTS = 200;
 
     // Maximum post search radius for map in kilometers
     private static final int MAX_POST_SEARCH_DISTANCE = 100;
@@ -153,7 +158,31 @@ public class MainActivityWhm extends FragmentActivity {
 	
 	
 	private void initMapView(MapView mapView){
+		
 		mapView.getController().setZoom(13);
+		mapView.getController().setOnMapLoadedListener(new OnLoadedListener() {
+			
+			@Override
+			public void onMapLoaded() {
+				// TODO Auto-generated method stub
+				doMapQuery_whm();
+			}
+		});
+		
+		mapView.getController().setOnMapCameraChangeListener(new OnMapCameraChangeListener() {
+			
+			@Override
+			public void onCameraChangeFinish(CameraPosition arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onCameraChange(CameraPosition arg0) {
+				// TODO Auto-generated method stub
+				doMapQuery_whm();
+			}
+		});
 		
 		mapView.getController().setOnMarkerClickListener(new OnMarkerPressListener() {
 			
@@ -167,7 +196,59 @@ public class MainActivityWhm extends FragmentActivity {
 		
 	}
 	
+	private void doMapQuery_whm(){
+		LatLng mapCenter = mMapView.getMapCenter();
+		
+		// get span
+		final ParseGeoPoint screenSouthWest = new ParseGeoPoint(mapCenter.getLatitude()-(mMapView.getLatitudeSpan()/(2*1E6)),
+			                                              mapCenter.getLongitude()-(mMapView.getLatitudeSpan()/(2*1E6))	);
+		final ParseGeoPoint screenNorthEast = new ParseGeoPoint(mapCenter.getLatitude()+(mMapView.getLatitudeSpan()/(2*1E6)),
+                mapCenter.getLongitude()+(mMapView.getLatitudeSpan()/(2*1E6))	);
+		
+		// do the query
+		ParseQuery<AnywallPost> mapQuery = AnywallPost.getQuery();
+		mapQuery.include("user");
+		mapQuery.orderByDescending("createAt");
+		mapQuery.setLimit(MAX_POST_SEARCH_RESULTS);
+		mapQuery.findInBackground(new FindCallback<AnywallPost>() {
 
+			@Override
+			public void done(List<AnywallPost> objects, ParseException e) {
+				// TODO Auto-generated method stub
+				if(e != null){
+					Toast.makeText(MainActivityWhm.this,"Êý¾Ý²éÑ¯´íÎó£º"+e.getMessage(),Toast.LENGTH_LONG).show();
+					return;
+				}
+				else {
+					// clear all the markers which are not in the scope of view
+					for(String objectId : new HashSet<String>(mapMarkers.keySet())){
+						Marker marker = mapMarkers.get(objectId);
+						
+						LatLngBounds bounds = new LatLngBounds(new LatLng(screenSouthWest.getLatitude(),screenSouthWest.getLongitude()),
+															   new LatLng(screenNorthEast.getLatitude(),screenNorthEast.getLongitude())	);
+						if(!bounds.contains(marker.getPosition())){
+							marker.remove();
+							mapMarkers.remove(objectId);
+						}
+					}
+					// add all newly added markers
+					for(AnywallPost post : objects){
+						if(!mapMarkers.containsKey(post.getObjectId())){
+							MarkerOptions options = new MarkerOptions()
+								.title(post.getText())
+								.snippet(post.getUser().getUsername())
+								.icon(BitmapDescriptorFactory.defaultMarker())
+								.position(new LatLng(post.getLocation().getLatitude(),post.getLocation().getLongitude()));
+							
+							Marker marker = mMapView.addMarker(options);
+							mapMarkers.put(post.getObjectId(), marker);
+						}
+					}
+				}
+			
+			}
+		});
+	}
 	 /*
 	   * Set up the query to update the map view
 	   */
@@ -294,7 +375,7 @@ public class MainActivityWhm extends FragmentActivity {
 			Toast.makeText(this, "request location updates failed", Toast.LENGTH_LONG).show();
 		}
 		
-		doMapQuery();
+		doMapQuery_whm();
 	}
 	@Override
 	protected void onPause() {
