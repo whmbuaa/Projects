@@ -174,13 +174,13 @@ public class MainActivityWhm extends FragmentActivity {
 			@Override
 			public void onCameraChangeFinish(CameraPosition arg0) {
 				// TODO Auto-generated method stub
-				
+				doMapQuery_whm();
 			}
 			
 			@Override
 			public void onCameraChange(CameraPosition arg0) {
 				// TODO Auto-generated method stub
-				doMapQuery_whm();
+				
 			}
 		});
 		
@@ -210,6 +210,7 @@ public class MainActivityWhm extends FragmentActivity {
 		mapQuery.include("user");
 		mapQuery.orderByDescending("createAt");
 		mapQuery.setLimit(MAX_POST_SEARCH_RESULTS);
+		mapQuery.whereWithinGeoBox("location", screenSouthWest, screenNorthEast);
 		mapQuery.findInBackground(new FindCallback<AnywallPost>() {
 
 			@Override
@@ -227,8 +228,9 @@ public class MainActivityWhm extends FragmentActivity {
 						LatLngBounds bounds = new LatLngBounds(new LatLng(screenSouthWest.getLatitude(),screenSouthWest.getLongitude()),
 															   new LatLng(screenNorthEast.getLatitude(),screenNorthEast.getLongitude())	);
 						if(!bounds.contains(marker.getPosition())){
-							marker.remove();
-							mapMarkers.remove(objectId);
+							Log.i("whm","remove invisible marker:"+marker.getTitle());
+//							marker.remove();
+//							mapMarkers.remove(objectId);
 						}
 					}
 					// add all newly added markers
@@ -242,6 +244,7 @@ public class MainActivityWhm extends FragmentActivity {
 							
 							Marker marker = mMapView.addMarker(options);
 							mapMarkers.put(post.getObjectId(), marker);
+							Log.i("whm","add newly visible marker:"+marker.getTitle());
 						}
 					}
 				}
