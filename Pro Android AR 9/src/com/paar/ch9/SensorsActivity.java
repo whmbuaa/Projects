@@ -17,6 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SensorsActivity extends Activity implements SensorEventListener, LocationListener {
     private static final String TAG = "SensorsActivity";
@@ -224,6 +225,7 @@ public class SensorsActivity extends Activity implements SensorEventListener, Lo
     }
 
     public void onLocationChanged(Location location) {
+    	Toast.makeText(this, "定位成功", Toast.LENGTH_LONG).show();
         ARData.setCurrentLocation(location);
         gmf = new GeomagneticField((float) ARData.getCurrentLocation().getLatitude(), 
                 (float) ARData.getCurrentLocation().getLongitude(),
