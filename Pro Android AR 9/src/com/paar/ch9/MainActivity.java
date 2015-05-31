@@ -47,11 +47,11 @@ public class MainActivity extends AugmentedActivity {
         
         LocalDataSource localData = new LocalDataSource(this.getResources());
         ARData.addMarkers(localData.getMarkers());
-
-        NetworkDataSource twitter = new TwitterDataSource(this.getResources());
-        sources.put("twitter",twitter);
-        NetworkDataSource wikipedia = new WikipediaDataSource(this.getResources());
-        sources.put("wiki",wikipedia);
+//
+//        NetworkDataSource twitter = new TwitterDataSource(this.getResources());
+//        sources.put("twitter",twitter);
+//        NetworkDataSource wikipedia = new WikipediaDataSource(this.getResources());
+//        sources.put("wiki",wikipedia);
         
         
     }
@@ -179,7 +179,7 @@ public class MainActivity extends AugmentedActivity {
 					ARData.addMarkers(markers);
 				}
 				else{
-//					Toast.makeText(MainActivity.this, "查找兴趣点失败"+poiResult.error.toString(), Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, "查找兴趣点失败"+poiResult.error.toString(), Toast.LENGTH_LONG).show();
 				}
 			}
 			

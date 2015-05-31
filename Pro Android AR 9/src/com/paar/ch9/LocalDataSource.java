@@ -29,11 +29,29 @@ public class LocalDataSource extends DataSource{
 //    39.907190,116.408899
     
     public List<Marker> getMarkers() {
-        Marker atl = new IconMarker("ATL",39.907190, 116.408899, 0, Color.DKGRAY, icon);
+        Marker atl = new IconMarker("天安门",39.907190, 116.408899, 0, Color.DKGRAY, icon);
         cachedMarkers.add(atl);
 
-        Marker home = new Marker("Mt Laurel", 39.95, -74.9, 0, Color.YELLOW);
-        cachedMarkers.add(home);
+       
+        Marker m2 = new IconMarker("首都机场",40.081837,116.613520, 0, Color.DKGRAY, icon);
+        cachedMarkers.add(m2);
+        
+        
+       
+        Marker m3 = new IconMarker("奥林匹克公园",40.019669, 116.402211, 0, Color.DKGRAY, icon);
+        cachedMarkers.add(m3);
+        
+     
+        Marker m4 = new IconMarker("石景山游乐园",39.911916, 116.207547, 0, Color.DKGRAY, icon);
+        cachedMarkers.add(m4);
+     
+        
+        Marker m5 = new IconMarker("中国传媒大学",39.910073, 116.568379, 0, Color.DKGRAY, icon);
+        cachedMarkers.add(m5);
+       
+        
+        Marker m6 = new IconMarker("世界花卉大观园",39.836033, 116.369080, 0, Color.DKGRAY, icon);
+        cachedMarkers.add(m3);
 
         return cachedMarkers;
     }
