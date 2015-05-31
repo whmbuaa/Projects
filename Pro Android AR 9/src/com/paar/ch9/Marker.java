@@ -362,10 +362,10 @@ public class Marker implements Comparable<Marker> {
 		
 	    String textStr = null;
 	    if (distance<1000.0) {
-	        textStr = name + " \n¾àÀë£º"+ DECIMAL_FORMAT.format(distance) + "Ã×";          
+	        textStr = name + " (è·ç¦»"+ DECIMAL_FORMAT.format(distance) + "ç±³)";          
 	    } else {
 	        double d=distance/1000.0;
-	        textStr = name + " \n¾àÀë£º" + DECIMAL_FORMAT.format(d) + "¹«Àï";
+	        textStr = name + " (è·ç¦»" + DECIMAL_FORMAT.format(d) + "å…¬é‡Œ)";
 	    }
 
 	    textXyzRelativeToCameraView.get(textArray);

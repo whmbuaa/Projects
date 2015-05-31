@@ -72,7 +72,7 @@ public class AugmentedActivity extends SensorsActivity implements OnTouchListene
 
         myZoomBar = new VerticalSeekBar(this);
         myZoomBar.setMax(100);
-        myZoomBar.setProgress(50);
+        myZoomBar.setProgress(0);
         myZoomBar.setOnSeekBarChangeListener(myZoomBarOnSeekBarChangeListener);
         LinearLayout.LayoutParams zoomBarParams =  new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT);
         zoomBarParams.gravity = Gravity.CENTER_HORIZONTAL;

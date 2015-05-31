@@ -3,6 +3,8 @@ package com.paar.ch9;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.baidu.mapapi.SDKInitializer;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.GeomagneticField;
@@ -44,6 +46,7 @@ public class SensorsActivity extends Activity implements SensorEventListener, Lo
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SDKInitializer.initialize(getApplicationContext());  
     }
 
 	@Override
