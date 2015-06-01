@@ -179,7 +179,7 @@ public class MainActivity extends AugmentedActivity {
 					ARData.addMarkers(markers);
 				}
 				else{
-					Toast.makeText(MainActivity.this, "查找兴趣点失败"+poiResult.error.toString(), Toast.LENGTH_LONG).show();
+//					Toast.makeText(MainActivity.this, "查找兴趣点失败"+poiResult.error.toString(), Toast.LENGTH_LONG).show();
 				}
 			}
 			
